@@ -5,3 +5,4 @@
 .local/share/jupyter/nbsignatures.db
 .local/share/jupyter/runtime/notebook_cookie_secret
 *.pyc
+.ipynb_checkpoints

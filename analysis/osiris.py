@@ -56,14 +56,14 @@ def run_upic_es(rundir='',inputfile='pinput2',np=None):
     def combine_h5_2d(path, ex):
         in_file = path + '/' + ex + '/'
         out_file = ex + '.h5'
-        for path in execute(["python", "/usr/local/osiris/combine_h5_util_2d.py", in_file, out_file]):
+        for path in execute(["python3", "/home/sbolanos/Documents/code/JupyterPIC/analysis/combine_h5_util_2d.py", in_file, out_file]):
             IPython.display.clear_output(wait=True)
-            print(path, end='')
+            #print(path, end='')
 
     def combine_h5_iaw_2d():
         in_file = 'DIAG/IDen/'
         out_file = 'ions.h5'
-        for path in execute(["python", "/usr/local/osiris/combine_h5_util_2d.py", in_file, out_file]):
+        for path in execute(["python3", "/home/sbolanos/Documents/code/JupyterPIC/analysis/combine_h5_util_2d.py", in_file, out_file]):
             print(path, end='')
             IPython.display.clear_output(wait=True)
 
@@ -143,7 +143,7 @@ def runosiris(rundir='',inputfile='osiris-input.txt',print_out='yes',combine='ye
     def combine_h5_1d(ex):
         in_file = rundir + '/MS/FLD/' + ex + '/'
         out_file = rundir + '/' + ex + '.h5'
-        for path in execute(["python", "/usr/local/osiris/combine_h5_util_1d.py", in_file, out_file]):
+        for path in execute(["python3", "/home/sbolanos/Documents/code/JupyterPIC/analysis/combine_h5_util_1d.py", in_file, out_file]):
             if print_out == 'yes':
                 IPython.display.clear_output(wait=True)
 #            print(path, end='')
@@ -151,7 +151,7 @@ def runosiris(rundir='',inputfile='osiris-input.txt',print_out='yes',combine='ye
     def combine_h5_iaw_1d():
         in_file = rundir + '/MS/DENSITY/ions/charge/'
         out_file = rundir + '/ions.h5'
-        for path in execute(["python", "/usr/local/osiris/combine_h5_util_1d.py", in_file, out_file]):
+        for path in execute(["python3", "/home/sbolanos/Documents/code/JupyterPIC/analysis/combine_h5_util_1d.py", in_file, out_file]):
             if print_out == 'yes':
                 IPython.display.clear_output(wait=True)
 #            print(path, end='')
@@ -160,7 +160,8 @@ def runosiris(rundir='',inputfile='osiris-input.txt',print_out='yes',combine='ye
         localexec = './osiris-1D.e'
     else:
         localexec = False
-    sysexec = '/usr/local/osiris/osiris-1D.e'
+    sysexec = '/home/sbolanos/Documents/code/osiris/bin/osiris-1D.e'
+    print(sysexec)
     if print_out == 'yes':
         print(rundir)
 
