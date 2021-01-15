@@ -242,12 +242,12 @@ def srs_movie(rundir):
         eden_dir = working_dir + '/MS/DENSITY/electrons/charge/'
         iden_dir = working_dir + '/MS/DENSITY/ions/charge/'
         phase_space_dir=working_dir+'/MS/PHA/p1x1/ions/'
-        p1x1_dir=working_dir+'/MS/PHA/p1x1/electrons/'
+        p1x1_dir=working_dir+'/MS/PHA/p1p2/electrons/'
 
         efield_prefix='e1-'
         laser_prefix='e2-'
         phase_prefix='p1x1-ions-'
-        p1x1_prefix='p1x1-electrons-'
+        p1x1_prefix='p1p2-electrons-'
         eden_prefix='charge-electrons-'
         iden_prefix='charge-ions-'
         fig = plt.figure(figsize=(12,16) )
@@ -323,7 +323,7 @@ def srs_movie(rundir):
     file_interval=int(files[1][start:end])
     file_max=(len(files)-1)*file_interval
 
-    interact(something,rundir=fixed(rundir),file_no=widgets.IntSlider(min=0,max=file_max,step=file_interval,value=0), continuous_update=False)
+    interact(something,rundir=fixed(rundir),file_no=widgets.IntSlider(min=0,max=file_max,step=file_interval*100,value=0), continuous_update=False)
     #something(rundir=rundir,file_no=20)
     
     

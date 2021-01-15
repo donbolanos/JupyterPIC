@@ -726,18 +726,18 @@ def gen_path(rundir, plot_or):
     return PATH
 
 def plot_xt_arb(rundir, field='Ex',
-            xlim=[None,None], tlim=[None,None],plot_show=True):
+            xlim=[None,None], tlim=[None,None],plot_show=True,**kwargs):
 
     # initialize values
     PATH = os.getcwd() + '/' + rundir +'/'+ field + '.h5'
     hdf5_data = read_hdf(PATH)
 
     if(xlim == [None,None]):
-        xlim[0] = hdf5_data.axes[0].axis_min
-        xlim[1] = hdf5_data.axes[0].axis_max
+        xlim[0] = hdf5_data.axes[1].axis_min
+        xlim[1] = hdf5_data.axes[1].axis_max
     if(tlim == [None,None]):
-        tlim[0] = hdf5_data.axes[1].axis_min
-        tlim[1] = hdf5_data.axes[1].axis_max
+        tlim[0] = hdf5_data.axes[0].axis_min
+        tlim[1] = hdf5_data.axes[0].axis_max
 
 
 #    y_vals = np.arange(hdf5_data.axes[1].axis_min, hdf5_data.axes[1].axis_max, 1)
@@ -748,7 +748,7 @@ def plot_xt_arb(rundir, field='Ex',
 
     # create figure
     plt.figure(figsize=(8,5))
-    plotme(hdf5_data )
+    plotmetranspose(hdf5_data, **kwargs )
     plt.title(field + ' x-t space' + field )
     plt.xlabel('x')
     plt.ylabel('t')
@@ -771,11 +771,11 @@ def plot_xt(rundir, TITLE='', b0_mag=0.0, w_0 = 1.0, one_0 = 10, one_D= 790, n_p
     hdf5_data = read_hdf(PATH)
 
     if(xlim == [None,None]):
-        xlim[0] = hdf5_data.axes[0].axis_min
-        xlim[1] = hdf5_data.axes[0].axis_max
+        xlim[0] = hdf5_data.axes[1].axis_min
+        xlim[1] = hdf5_data.axes[1].axis_max
     if(tlim == [None,None]):
-        tlim[0] = hdf5_data.axes[1].axis_min
-        tlim[1] = hdf5_data.axes[1].axis_max
+        tlim[0] = hdf5_data.axes[0].axis_min
+        tlim[1] = hdf5_data.axes[0].axis_max
 
 #    w_0 = 1.0
     n_L = w_0**2 + w_0*b0_mag
@@ -1117,7 +1117,7 @@ def plot_wk_arb(rundir, field, TITLE, background=0.0, wlim=3, klim=5,plot_show=T
     wvals = kvals * c_s
 
     # create figure
-    plt.figure(figsize=(10,10))
+    plt.figure(figsize=(8,5))
     plotme(hdf5_data)
 
     plt.title(TITLE + ' w-k space' +  TITLE)
@@ -1143,7 +1143,7 @@ def plot_tk_arb(rundir, field, title='potential', klim=5,tlim=100):
     k_data=np.fft.fft(hdf5_data.data,axis=1)
     hdf5_data.data=np.abs(k_data)
 
-    hdf5_data.axes[0].axis_max=2.0*3.1415926
+    hdf5_data.axes[1].axis_max=2.0*3.1415926
 
 
 #    N = 100
@@ -1152,13 +1152,14 @@ def plot_tk_arb(rundir, field, title='potential', klim=5,tlim=100):
 #    wvals = kvals * c_s
 
     # create figure
-    plt.figure(figsize=(10,10))
-    plotme(hdf5_data)
+    plt.figure(figsize=(8,5))
+    #plotme(hdf5_data)
+    plotmetranspose(hdf5_data)
 
     plt.title(title + ' t-k space' )
 
-    plt.xlabel('k  [$1/ \Delta x$]',**axis_font)
-    plt.ylabel(' Time  [$1/ \omega_{pe}$]',**axis_font)
+    plt.xlabel('k  [$1/ \Delta x$]')#,**axis_font)
+    plt.ylabel(' Time  [$1/ \omega_{pe}$]')#,**axis_font)
     plt.xlim(0,klim)
     plt.ylim(0,tlim)
     plt.show()
@@ -2057,3 +2058,47 @@ def phasespace_movie(rundir):
 
     interact(something,rundir=fixed(rundir),file_no=widgets.IntSlider(min=0,max=file_max,step=file_interval,value=0))
     #something(rundir=rundir,file_no=20)
+
+
+################################################################
+##  Simon's Poynting flux functions
+##  S. BOLANOS
+##  (c) 2021 UCSD
+#################################################################
+
+def get_Poynting(rundir):
+
+    
+    # get E and B
+    PATH = os.getcwd() + '/' + rundir +'/e1.h5'
+    e1 = read_hdf(PATH)
+    PATH = os.getcwd() + '/' + rundir +'/e2.h5'
+    e2 = read_hdf(PATH)
+    PATH = os.getcwd() + '/' + rundir +'/e3.h5'
+    e3 = read_hdf(PATH)
+    PATH = os.getcwd() + '/' + rundir +'/b1.h5'
+    b1 = read_hdf(PATH)
+    PATH = os.getcwd() + '/' + rundir +'/b2.h5'
+    b2 = read_hdf(PATH)
+    PATH = os.getcwd() + '/' + rundir +'/b3.h5'
+    b3 = read_hdf(PATH)
+    
+    # initiate the S
+    s1 = e1
+    s2 = e2
+    s3 = e3
+
+    #poynting flux
+    s1.data = (e2.data*b3.data-e3.data*e2.data)
+    s2.data = (e3.data*b1.data-e1.data*b3.data)
+    s3.data = (e1.data*b2.data-e2.data*b1.data)
+
+    return s1,s2,s3
+
+def get_field(rundir, field = 'e1'):
+    
+    # initialize values
+    PATH = os.getcwd() + '/' + rundir +'/'+field+'.h5'
+    field_data = read_hdf(PATH).data
+
+    return field_data
